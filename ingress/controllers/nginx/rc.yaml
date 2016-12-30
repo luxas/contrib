@@ -66,6 +66,7 @@ spec:
         k8s-app: nginx-ingress-lb
         name: nginx-ingress-lb
     spec:
+      hostNetwork: true
       terminationGracePeriodSeconds: 60
       containers:
       - image: gcr.io/google_containers/nginx-ingress-controller:0.8.3
@@ -94,10 +95,8 @@ spec:
               fieldRef:
                 fieldPath: metadata.namespace
         ports:
-        - containerPort: 80
-          hostPort: 80
-        - containerPort: 443
-          hostPort: 443
+        - containerPort: 8888
+        - containerPort: 4443
         # we expose 18080 to access nginx stats in url /nginx-status
         # this is optional
         - containerPort: 18080

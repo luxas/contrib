@@ -12,7 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM gcr.io/google_containers/nginx-slim:0.9
+FROM BASEIMAGE
+
+# If we're building for another architecture than amd64, the CROSS_BUILD_ placeholder is removed so e.g. CROSS_BUILD_COPY turns into COPY
+# If we're building normally, for amd64, CROSS_BUILD lines are removed
+CROSS_BUILD_COPY qemu-ARCH-static /usr/bin/
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && apt-get install -y \
   diffutils \

@@ -13,8 +13,11 @@
 # limitations under the License.
 
 
-FROM gcr.io/google_containers/ubuntu-slim:0.3
-MAINTAINER Prashanth B <beeps@google.com>
+FROM BASEIMAGE
+
+# If we're building for another architecture than amd64, the CROSS_BUILD_ placeholder is removed so e.g. CROSS_BUILD_COPY turns into COPY
+# If we're building normally, for amd64, CROSS_BUILD lines are removed
+CROSS_BUILD_COPY qemu-ARCH-static /usr/bin/
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
   bash curl socat haproxy ca-certificates liblua5.3-0 && \

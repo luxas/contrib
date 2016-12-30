@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+FROM BASEIMAGE
 
-FROM gcr.io/google_containers/ubuntu-slim:0.5
+# If we're building for another architecture than amd64, the CROSS_BUILD_ placeholder is removed so e.g. CROSS_BUILD_COPY turns into COPY
+# If we're building normally, for amd64, CROSS_BUILD lines are removed
+CROSS_BUILD_COPY qemu-ARCH-static /usr/bin/
 
+# Include the script in the image and execute it
 COPY build.sh /tmp
-
 RUN /tmp/build.sh
 
 # Create symlinks to redirect nginx logs to stdout and stderr docker log collector
 # This only works if nginx is started with CMD or ENTRYPOINT
-RUN ln -sf /dev/stdout /var/log/nginx/access.log
-RUN ln -sf /dev/stderr /var/log/nginx/error.log
-
-EXPOSE 80 443
+RUN ln -sf /dev/stdout /var/log/nginx/access.log && ln -sf /dev/stderr /var/log/nginx/error.log
 
 CMD ["nginx", "-g", "daemon off;"]
